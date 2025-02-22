@@ -42,7 +42,7 @@ import {
   const toolNode = new ToolNode(tools);
   
   // Connect to the LLM provider with better tool instructions
-  const initialiseModel = () => {
+  const initialiseModel = async () => {
     const model = new ChatOpenAI({ 
       modelName: "gpt-4o-mini", 
       openAIApiKey: process.env.OPENAI_API_KEY, 
@@ -60,7 +60,7 @@ import {
             // console.log("🤖 Starting LLM call");
           },
           handleLLMEnd: async (output) => {
-            // console.log("🤖 End LLM call", output);
+            console.log("🤖 End LLM call", output);
             // const usage = output.llmOutput?.usage;
             // if (usage) {
               // console.log("📊 Token Usage:", {
@@ -103,8 +103,8 @@ import {
   }
   
   // Define a new graph
-  const createWorkflow = () => {
-    const model = initialiseModel();
+  const createWorkflow = async () => {
+    const model = await initialiseModel();
   
     const stateGraph =  new StateGraph(MessagesAnnotation)
       .addNode("agent", async (state) => {
@@ -138,7 +138,7 @@ import {
     return stateGraph;
   };
   
-  function addCachingHeaders(messages: BaseMessage[]): BaseMessage[] {
+  async function addCachingHeaders(messages: BaseMessage[]): Promise<BaseMessage[]> {
     if (!messages.length) return messages;
   
     // Create a copy of messages to avoid mutating the original
@@ -177,11 +177,11 @@ import {
   
   export async function submitQuestion(messages: BaseMessage[], chatId: string) {
     // Add caching headers to messages
-    const cachedMessages = addCachingHeaders(messages);
+    const cachedMessages = await addCachingHeaders(messages);
     // console.log("🔒🔒🔒 Messages:", cachedMessages);
   
     // Create workflow with chatId and onToken callback
-    const workflow = createWorkflow();
+    const workflow = await createWorkflow();
   
     // Create a checkpoint to save the state of the conversation
     const checkpointer = new MemorySaver();
