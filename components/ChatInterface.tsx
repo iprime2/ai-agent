@@ -126,6 +126,8 @@ export default function ChatInterface({
         body: JSON.stringify(requestBody),
       });
 
+      console.log("after api");
+
       if (!response.ok) throw new Error(await response.text());
       if (!response.body) throw new Error("No response body available");
 
