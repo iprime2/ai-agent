@@ -33,14 +33,18 @@ export async function POST(req: Request) {
       return new Response("Unauthorized", { status: 401 });
     }
 
+    console.log("here1");
     const { messages, newMessage, chatId } =
-      (await req.json()) as ChatRequestBody;
+    (await req.json()) as ChatRequestBody;
     const convex = getConvexClient();
+    console.log("here2");
 
     // Create stream with larger queue strategy for better performance
     const stream = new TransformStream({}, { highWaterMark: 1024 });
     const writer = stream.writable.getWriter();
 
+    console.log("here3");
+    
     const response = new Response(stream.readable, {
       headers: {
         "Content-Type": "text/event-stream",
@@ -51,12 +55,18 @@ export async function POST(req: Request) {
         'Access-Control-Allow-Methods': 'POST'
       },
     });
+    console.log("here4");
 
     // Handle the streaming response
     (async () => {
       try {
+    console.log("here5");
+
         // Send initial connection established message
         await sendSSEMessage(writer, { type: StreamMessageType.Connected });
+
+    console.log("here6");
+
 
         // Send user message to Convex
         await convex.mutation(api.messages.send, {
@@ -75,11 +85,15 @@ export async function POST(req: Request) {
         ];
 
         try {
+    console.log("here7");
+
           // Create the event stream
           const eventStream = await submitQuestion(langChainMessages, chatId);
 
           // Process the events
           for await (const event of eventStream) {
+    console.log("here8");
+
             // console.log("🔄 Event:", event);
 
             if (event.event === "on_chat_model_stream") {
