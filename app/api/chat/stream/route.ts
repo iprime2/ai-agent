@@ -47,6 +47,8 @@ export async function POST(req: Request) {
         // "Cache-Control": "no-cache, no-transform",
         Connection: "keep-alive",
         "X-Accel-Buffering": "no", // Disable buffering for nginx which is required for SSE to work properly
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST'
       },
     });
 
