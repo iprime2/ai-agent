@@ -120,6 +120,15 @@ export default function ChatInterface({
 
       
       // Initialize SSE connection
+      const test = await fetch("/api/chat/stream", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+
+      console.log(test);
+      
+      // Initialize SSE connection
       const response = await fetch("/api/chat/stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
