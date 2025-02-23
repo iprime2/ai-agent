@@ -26,7 +26,11 @@ function sendSSEMessage(
   );
 }
 
-export async function POST(req: Request) {
+export async function PATCH(req: Request) {
+  // Process the body and return a response
+  return NextResponse.json({ message: "Success" });
+}
+  export async function POST(req: Request) {
   try {
     const { userId } = await auth();
     if (!userId) {
