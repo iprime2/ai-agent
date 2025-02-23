@@ -196,6 +196,5 @@ import {
         runId: chatId,
       }
     );
-    console.log(stream);
     return stream;
   }
